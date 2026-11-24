@@ -1,74 +1,258 @@
+
 <!DOCTYPE html>
-<html >
-<!--From https://codepen.io/frytyler/pen/EGdtg-->
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>ML API</title>
-  <link href='https://fonts.googleapis.com/css?family=Pacifico' rel='stylesheet' type='text/css'>
-<link href='https://fonts.googleapis.com/css?family=Arimo' rel='stylesheet' type='text/css'>
-<link href='https://fonts.googleapis.com/css?family=Hind:300' rel='stylesheet' type='text/css'>
-<link href='https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300' rel='stylesheet' type='text/css'>
-<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<style>
+    <title>TrafficPredict | Traffic Volume Prediction</title>
 
-select { 
-	width: 100%; 
-	margin-bottom: 10px; 
-	background: #fff;
-	border: none;
-	outline: none;
-	padding: 10px;
-	font-size: 13px;
-	color: #092756;
-	text-shadow: 1px 1px 1px rgba(0,0,0,0.3);
-	border: 1px solid rgba(0,0,0,0.3);
-	border-radius: 4px;
-	box-shadow: inset 0 -5px 45px rgba(100,100,100,0.2), 0 1px 1px rgba(255,255,255,0.2);
-}
-.login{
-top: 20%;
-}
-</style>
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+          rel="stylesheet">
 </head>
 
 <body>
- <div class="login">
-	  <h4>Predict the Traffic Volume </h4>
+
+    <div class="page-wrapper">
+
+        <!-- Navigation -->
+        <nav class="navbar">
+            <div class="brand">
+                <div class="brand-icon">T</div>
+                <span>Traffic<span class="brand-highlight">AI</span></span>
+            </div>
+
+            <div class="nav-status">
+                <span class="status-dot"></span>
+                AI Prediction
+            </div>
+        </nav>
 
 
-     <!-- Main Input For Receiving Query to our ML -->
-    <form action= "/y_predict" method="post">
-        <input type="number" name="temp" placeholder="Tempreture in Celsius" step = 0.01 required="required" />
-        <input type="number" name="rain" placeholder="Rain" step = 0.01 required="required" />
-		<select name="weather" required="required">
-		  <option value="">Select Weather Condition </option>
-		  <option value= Clouds>Clouds</option>
-		  <option value=  Clear>Clear</option>
-		  <option value= Rain>Rain</option>
-		  <option value=  Drizzle>Drizzle</option>
-		  <option value= Mist>Mist</option>
-		  <option value=  Haze>Haze</option>
-		  <option value= Fog>Fog</option>
-		  <option value=  Thunderstorm>Thunderstorm</option>
-		  <option value= Snow>Snow</option>
-		  <option value=  Squall>Squall</option>
-		  <option value= Smoke>Smoke</option>
-		</select>
-        <input type="time" name="time" placeholder="Time" required="required" />
-        <input type="date" name="date" placeholder="date" required="required" />
-        <button type="submit" class="btn btn-warning btn-block btn-large">Predict</button>
+        <!-- Main Content -->
+        <main class="main-content">
+
+            <section class="hero">
+                <div class="hero-tag">
+                    <span class="hero-tag-icon">✦</span>
+                    MACHINE LEARNING POWERED
+                </div>
+
+                <h1>Traffic Volume <span>Prediction</span></h1>
+
+                <p>
+                    Predict traffic volume using weather conditions,
+                    temperature and time-based information.
+                </p>
+            </section>
 
 
-    
+            <section class="prediction-layout">
 
-    
-   <br>
-   <br>
-    <h3> The Predicted Traffic Volume is {{ prediction_text }} (veh/hr) </h3>
- </div>
+                <!-- Prediction Form -->
+                <div class="form-card">
 
+                    <div class="card-heading">
+                        <div>
+                            <h2>Prediction Details</h2>
+                            <p>Enter the environmental information below.</p>
+                        </div>
+
+                        <div class="heading-icon">↗</div>
+                    </div>
+
+
+                    <form action="{{ url_for('prediction') }}" method="POST">
+
+                        <div class="form-section-title">
+                            <span class="section-number">01</span>
+                            WEATHER INFORMATION
+                        </div>
+
+                        <div class="form-grid">
+
+                            <div class="form-group">
+                                <label for="temp">Temperature</label>
+
+                                <div class="input-wrapper">
+                                    <input
+                                        type="number"
+                                        id="temp"
+                                        name="temp"
+                                        placeholder="Enter temperature"
+                                        step="0.01"
+                                        required
+                                    >
+                                    <span class="input-unit">°C</span>
+                                </div>
+                            </div>
+
+
+                            <div class="form-group">
+                                <label for="rain">Rainfall</label>
+
+                                <div class="input-wrapper">
+                                    <input
+                                        type="number"
+                                        id="rain"
+                                        name="rain"
+                                        placeholder="Enter rainfall"
+                                        step="0.01"
+                                        min="0"
+                                        required
+                                    >
+                                    <span class="input-unit">mm</span>
+                                </div>
+                            </div>
+
+
+                            <div class="form-group full-width">
+                                <label for="weather">Weather Condition</label>
+
+                                <select id="weather" name="weather" required>
+                                    <option value="" disabled selected>
+                                        Select weather condition
+                                    </option>
+                                    <option value="Clouds">Clouds</option>
+                                    <option value="Clear">Clear</option>
+                                    <option value="Rain">Rain</option>
+                                    <option value="Drizzle">Drizzle</option>
+                                    <option value="Mist">Mist</option>
+                                    <option value="Haze">Haze</option>
+                                    <option value="Fog">Fog</option>
+                                    <option value="Thunderstorm">Thunderstorm</option>
+                                    <option value="Snow">Snow</option>
+                                    <option value="Squall">Squall</option>
+                                    <option value="Smoke">Smoke</option>
+                                </select>
+                            </div>
+
+                        </div>
+
+
+                        <div class="form-divider"></div>
+
+
+                        <div class="form-section-title">
+                            <span class="section-number">02</span>
+                            DATE & TIME INFORMATION
+                        </div>
+
+
+                        <div class="form-grid">
+
+                            <div class="form-group">
+                                <label for="date">Prediction Date</label>
+
+                                <input
+                                    type="date"
+                                    id="date"
+                                    name="date"
+                                    required
+                                >
+                            </div>
+
+
+                            <div class="form-group">
+                                <label for="time">Prediction Time</label>
+
+                                <input
+                                    type="time"
+                                    id="time"
+                                    name="time"
+                                    required
+                                >
+                            </div>
+
+                        </div>
+
+
+                        <button type="submit" class="predict-button">
+                            <span>Generate Prediction</span>
+                            <span class="button-arrow">→</span>
+                        </button>
+
+                        <p class="form-footer">
+                            Powered by XGBoost Machine Learning
+                        </p>
+
+                    </form>
+
+                </div>
+
+
+                <!-- Result Panel -->
+                <aside class="result-card">
+
+                    <div class="result-top">
+                        <div class="result-icon">⌁</div>
+                        <span class="result-label">PREDICTION RESULT</span>
+                    </div>
+
+                    {% if prediction_text is defined and prediction_text is not none %}
+
+                        <div class="result-content">
+                            <p class="result-caption">
+                                Estimated Traffic Volume
+                            </p>
+
+                            <div class="result-value">
+                                {{ prediction_text }}
+                            </div>
+
+                            <div class="result-unit">
+                                VEHICLES / HOUR
+                            </div>
+
+                            <div class="result-success">
+                                <span class="success-dot"></span>
+                                Prediction generated successfully
+                            </div>
+                        </div>
+
+                    {% else %}
+
+                        <div class="empty-result">
+                            <div class="empty-illustration">↗</div>
+
+                            <h3>Awaiting Prediction</h3>
+
+                            <p>
+                                Complete the prediction form and click
+                                Generate Prediction to see your results here.
+                            </p>
+                        </div>
+
+                    {% endif %}
+
+
+                    <div class="result-bottom">
+                        <div class="model-indicator">
+                            <span class="status-dot"></span>
+                            XGBoost Model
+                        </div>
+
+                        <span class="model-version">ML ENGINE</span>
+                    </div>
+
+                </aside>
+
+            </section>
+
+
+            <footer class="footer">
+                <p>TrafficPredict &copy; 2026 | Intelligent Traffic Prediction System</p>
+                <p>Machine Learning Powered Analytics</p>
+            </footer>
+
+        </main>
+
+    </div>
 
 </body>
 </html>
-
